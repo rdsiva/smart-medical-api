@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14
+    container_name: smart-medical-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-smart_medical_assistant}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-data:/data/postgres
+      - ./database/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - smart-medical-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # .NET API Backend
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart-medical-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=smart_medical_assistant;Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-password}
+    ports:
+      - "5000:80"
+      - "5001:443"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - smart-medical-network
+    restart: unless-stopped
+
+  # Nginx for serving the React frontend
+  frontend:
+    build:
+      context: ../smart-medical-mobile
+      dockerfile: Dockerfile
+    container_name: smart-medical-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    networks:
+      - smart-medical-network
+    restart: unless-stopped
+
+networks:
+  smart-medical-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
