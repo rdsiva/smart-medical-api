@@ -136,12 +136,12 @@ namespace SmartMedical.Infrastructure.Data
 
             modelBuilder.Entity<MedicationSchedule>()
                 .HasOne(ms => ms.Medication)
-                .WithMany(m => m.Schedules)
+                .WithMany(m => m.MedicationSchedules)
                 .HasForeignKey(ms => ms.MedicationId);
 
             modelBuilder.Entity<MedicationDose>()
                 .HasOne(md => md.Schedule)
-                .WithMany(ms => ms.Doses)
+                .WithMany(ms => ms.MedicationDoses)
                 .HasForeignKey(md => md.ScheduleId);
 
             modelBuilder.Entity<Prescription>()
@@ -151,14 +151,19 @@ namespace SmartMedical.Infrastructure.Data
 
             // Appointment configurations
             modelBuilder.Entity<Appointment>()
-                .HasOne(a => a.User)
-                .WithMany(u => u.Appointments)
-                .HasForeignKey(a => a.UserId);
-
-            modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Provider)
                 .WithMany(p => p.Appointments)
-                .HasForeignKey(a => a.ProviderId);
+                .HasForeignKey(a => new { a.UserId, a.ProviderId });
+
+            //modelBuilder.Entity<Appointment>()
+            //    .HasOne(a => a.User)
+            //    .WithMany(u => u.Appointments)
+            //    .HasForeignKey(a => a.UserId);
+
+            //modelBuilder.Entity<Appointment>()
+            //    .HasOne(a => a.Provider)
+            //    .WithMany(p => p.Appointments)
+            //    .HasForeignKey(a => a.ProviderId);
 
             modelBuilder.Entity<AppointmentReminder>()
                 .HasOne(ar => ar.Appointment)

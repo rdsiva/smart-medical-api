@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 
 namespace SmartMedical.Infrastructure.Data
 {
@@ -11,7 +10,7 @@ namespace SmartMedical.Infrastructure.Data
         {
             // Build configuration from appsettings.json
             IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(AppContext.BaseDirectory) 
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development"}.json", optional: true)
                 .Build();
@@ -21,7 +20,7 @@ namespace SmartMedical.Infrastructure.Data
 
             // Create DbContext options
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseNpgsql(connectionString, 
+            optionsBuilder.UseNpgsql(connectionString,
                 options => options.MigrationsAssembly("SmartMedical.API"));
 
             return new ApplicationDbContext(optionsBuilder.Options);

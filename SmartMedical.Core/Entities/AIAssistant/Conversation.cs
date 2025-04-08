@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartMedical.Core.Entities.AIAssistant
 {
     public class Conversation
     {
+        [Key]
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public string Title { get; set; }

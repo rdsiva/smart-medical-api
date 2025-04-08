@@ -25,5 +25,6 @@ namespace SmartMedical.Core.Entities.Medications
         public Auth.User User { get; set; }
         public ICollection<MedicationSchedule> MedicationSchedules { get; set; }
         public ICollection<MedicationDose> MedicationDoses { get; set; }
+        public ICollection<Prescription> Prescriptions { get; set; }
     }
 }

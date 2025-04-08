@@ -1,9 +1,11 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartMedical.Core.Entities.AIAssistant
 {
     public class Message
     {
+        [Key]
         public Guid Id { get; set; }
         public Guid ConversationId { get; set; }
         public string Role { get; set; } // 'user', 'assistant', 'system'

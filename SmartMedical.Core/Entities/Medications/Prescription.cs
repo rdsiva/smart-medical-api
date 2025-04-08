@@ -20,5 +20,7 @@ namespace SmartMedical.Core.Entities.Medications
 
         // Navigation properties
         public Auth.User User { get; set; }
+        public Medication Medication { get; set; }
+        public Guid MedicationId { get; set; }
     }
 }

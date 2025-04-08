@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SmartMedical.Core.Entities.Users;
 
 namespace SmartMedical.Core.Entities.Appointments
 {
@@ -7,7 +8,7 @@ namespace SmartMedical.Core.Entities.Appointments
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
-        public Guid? ProviderId { get; set; }
+        public Guid ProviderId { get; set; }
         public string AppointmentType { get; set; }
         public string Purpose { get; set; }
         public DateTime StartTime { get; set; }
@@ -21,5 +22,6 @@ namespace SmartMedical.Core.Entities.Appointments
         // Navigation properties
         public Auth.User User { get; set; }
         public ICollection<AppointmentReminder> Reminders { get; set; }
+        public UserProvider Provider { get; set; }
     }
 }

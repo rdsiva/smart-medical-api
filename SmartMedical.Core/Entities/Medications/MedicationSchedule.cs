@@ -14,5 +14,7 @@ namespace SmartMedical.Core.Entities.Medications
 
         // Navigation properties
         public Medication Medication { get; set; }
+        public ICollection<MedicationDose> MedicationDoses { get; set; }
+
     }
 }
