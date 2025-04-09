@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net9.0": {
+      "BCrypt.Net-Next": {
+        "type": "Direct",
+        "requested": "[4.0.3, )",
+        "resolved": "4.0.3",
+        "contentHash": "W+Cz5VCIuZXdS6+cQTKM7LmL1zcecf3DanI4RrGE/XzBfYR7kzKKHy7+/QsA5Cxp+QpQYIxmA1/bJJgVYf5U/Q=="
+      }
+    }
+  }
+}
