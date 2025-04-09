@@ -53,6 +53,42 @@ namespace SmartMedical.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configure schemas for entities
+            
+            // Auth schema entities
+            modelBuilder.Entity<User>().ToTable("users", "auth");
+            modelBuilder.Entity<Role>().ToTable("roles", "auth");
+            modelBuilder.Entity<UserRole>().ToTable("user_roles", "auth");
+            modelBuilder.Entity<RefreshToken>().ToTable("refresh_tokens", "auth");
+
+            // Users schema entities
+            modelBuilder.Entity<Profile>().ToTable("profiles", "users");
+            modelBuilder.Entity<Address>().ToTable("addresses", "users");
+            modelBuilder.Entity<EmergencyContact>().ToTable("emergency_contacts", "users");
+            modelBuilder.Entity<HealthcareProvider>().ToTable("healthcare_providers", "users");
+            modelBuilder.Entity<UserProvider>().ToTable("user_providers", "users");
+
+            // Health records schema entities
+            modelBuilder.Entity<Condition>().ToTable("conditions", "health_records");
+            modelBuilder.Entity<Allergy>().ToTable("allergies", "health_records");
+            modelBuilder.Entity<Immunization>().ToTable("immunizations", "health_records");
+            modelBuilder.Entity<VitalStat>().ToTable("vital_stats", "health_records");
+
+            // Medications schema entities
+            modelBuilder.Entity<Medication>().ToTable("medications", "medications");
+            modelBuilder.Entity<MedicationSchedule>().ToTable("medication_schedules", "medications");
+            modelBuilder.Entity<MedicationDose>().ToTable("medication_doses", "medications");
+            modelBuilder.Entity<Prescription>().ToTable("prescriptions", "medications");
+
+            // Appointments schema entities
+            modelBuilder.Entity<Appointment>().ToTable("appointments", "appointments");
+            modelBuilder.Entity<AppointmentReminder>().ToTable("appointment_reminders", "appointments");
+
+            // AI Assistant schema entities
+            modelBuilder.Entity<Conversation>().ToTable("conversations", "ai_assistant");
+            modelBuilder.Entity<Message>().ToTable("messages", "ai_assistant");
+            modelBuilder.Entity<CachedPrompt>().ToTable("cached_prompts", "ai_assistant");
+
             // Configure relationships and constraints
             
             // Auth configurations
