@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net9.0": {
+      "BCrypt.Net-Next/4.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -1142,6 +1155,21 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
+      "SmartMedical.Business/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "BCrypt.Net-Next": "4.0.3",
+          "SmartMedical.Core": "1.0.0",
+          "SmartMedical.Infrastructure": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/SmartMedical.Business.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SmartMedical.Business.dll": {}
+        }
+      },
       "SmartMedical.Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
@@ -1172,6 +1200,37 @@
     }
   },
   "libraries": {
+    "BCrypt.Net-Next/4.0.3": {
+      "sha512": "W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
+      "type": "package",
+      "path": "bcrypt.net-next/4.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "bcrypt.net-next.4.0.3.nupkg.sha512",
+        "bcrypt.net-next.nuspec",
+        "ico.png",
+        "lib/net20/BCrypt.Net-Next.dll",
+        "lib/net20/BCrypt.Net-Next.xml",
+        "lib/net35/BCrypt.Net-Next.dll",
+        "lib/net35/BCrypt.Net-Next.xml",
+        "lib/net462/BCrypt.Net-Next.dll",
+        "lib/net462/BCrypt.Net-Next.xml",
+        "lib/net472/BCrypt.Net-Next.dll",
+        "lib/net472/BCrypt.Net-Next.xml",
+        "lib/net48/BCrypt.Net-Next.dll",
+        "lib/net48/BCrypt.Net-Next.xml",
+        "lib/net5.0/BCrypt.Net-Next.dll",
+        "lib/net5.0/BCrypt.Net-Next.xml",
+        "lib/net6.0/BCrypt.Net-Next.dll",
+        "lib/net6.0/BCrypt.Net-Next.xml",
+        "lib/netstandard2.0/BCrypt.Net-Next.dll",
+        "lib/netstandard2.0/BCrypt.Net-Next.xml",
+        "lib/netstandard2.1/BCrypt.Net-Next.dll",
+        "lib/netstandard2.1/BCrypt.Net-Next.xml",
+        "readme.md"
+      ]
+    },
     "Humanizer.Core/2.14.1": {
       "sha512": "lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw==",
       "type": "package",
@@ -3540,6 +3599,11 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "SmartMedical.Business/1.0.0": {
+      "type": "project",
+      "path": "../SmartMedical.Business/SmartMedical.Business.csproj",
+      "msbuildProject": "../SmartMedical.Business/SmartMedical.Business.csproj"
+    },
     "SmartMedical.Core/1.0.0": {
       "type": "project",
       "path": "../SmartMedical.Core/SmartMedical.Core.csproj",
@@ -3558,6 +3622,7 @@
       "Microsoft.Extensions.Configuration.FileExtensions >= 9.0.4",
       "Microsoft.Extensions.Configuration.Json >= 9.0.4",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 9.0.4",
+      "SmartMedical.Business >= 1.0.0",
       "SmartMedical.Core >= 1.0.0",
       "SmartMedical.Infrastructure >= 1.0.0",
       "Swashbuckle.AspNetCore >= 8.1.0"
@@ -3596,6 +3661,9 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
+            "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Business\\SmartMedical.Business.csproj": {
+              "projectPath": "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Business\\SmartMedical.Business.csproj"
+            },
             "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Core\\SmartMedical.Core.csproj": {
               "projectPath": "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Core\\SmartMedical.Core.csproj"
             },

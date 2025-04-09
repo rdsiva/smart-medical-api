@@ -27,7 +27,7 @@ namespace SmartMedical.API.Controllers
             {
                 // For now, we're using a hardcoded user ID for demonstration
                 // In a real application, this would come from the authenticated user
-                var userId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
+                var userId = Guid.Parse("235aa9a3-d82a-4331-9ea1-033807ddd64c");
                 
                 var profile = await _profileService.GetProfileByUserIdAsync(userId);
                 if (profile == null)
