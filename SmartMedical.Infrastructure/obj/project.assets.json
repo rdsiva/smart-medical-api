@@ -1038,16 +1038,6 @@
         "build": {
           "buildTransitive/net6.0/_._": {}
         }
-      },
-      "SmartMedical.Core/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v9.0",
-        "compile": {
-          "bin/placeholder/SmartMedical.Core.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SmartMedical.Core.dll": {}
-        }
       }
     }
   },
@@ -3105,11 +3095,6 @@
         "system.threading.channels.nuspec",
         "useSharedDesignerContext.txt"
       ]
-    },
-    "SmartMedical.Core/1.0.0": {
-      "type": "project",
-      "path": "../SmartMedical.Core/SmartMedical.Core.csproj",
-      "msbuildProject": "../SmartMedical.Core/SmartMedical.Core.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -3118,8 +3103,7 @@
       "Microsoft.Extensions.Configuration >= 9.0.4",
       "Microsoft.Extensions.Configuration.FileExtensions >= 9.0.4",
       "Microsoft.Extensions.Configuration.Json >= 9.0.4",
-      "Npgsql.EntityFrameworkCore.PostgreSQL >= 9.0.4",
-      "SmartMedical.Core >= 1.0.0"
+      "Npgsql.EntityFrameworkCore.PostgreSQL >= 9.0.4"
     ]
   },
   "packageFolders": {
@@ -3154,11 +3138,7 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {
-            "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Core\\SmartMedical.Core.csproj": {
-              "projectPath": "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Core\\SmartMedical.Core.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {

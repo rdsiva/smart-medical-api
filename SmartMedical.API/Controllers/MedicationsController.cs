@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using SmartMedical.Core.Entities.Medications;
+using SmartMedical.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

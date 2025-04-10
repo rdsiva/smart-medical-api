@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using SmartMedical.Core.Entities.Users;
 using SmartMedical.Core.Interfaces;
-using SmartMedical.Infrastructure.Data;
+using SmartMedical.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +19,7 @@ namespace SmartMedical.Infrastructure.Repositories
 
         public async Task<Profile> GetByUserIdAsync(Guid userId)
         {
+            
             return await _context.Profiles
                 .FirstOrDefaultAsync(p => p.UserId == userId);
         }

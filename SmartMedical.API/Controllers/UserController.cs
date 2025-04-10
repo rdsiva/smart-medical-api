@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartMedical.Business.Interfaces;
-using SmartMedical.Core.Entities.Auth;
+using SmartMedical.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -37,13 +37,13 @@ namespace SmartMedical.API.Controllers
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    DateOfBirth = user.DateOfBirth,
+                    DateOfBirth = user.DateOfBirth.ToDateTime(TimeOnly.MinValue), // Convert DateOnly to DateTime
                     PhoneNumber = user.PhoneNumber,
-                    EmailVerified = user.EmailVerified,
-                    IsActive = user.IsActive,
+                    EmailVerified = user.EmailVerified ?? false, // Fix for CS0266 and CS8629
+                    IsActive = user.IsActive ?? false, // Handle nullable IsActive similarly
                     LastLoginAt = user.LastLoginAt,
-                    CreatedAt = user.CreatedAt,
-                    UpdatedAt = user.UpdatedAt
+                    CreatedAt = user.CreatedAt ?? DateTime.MinValue, // Fix for CS0266 and CS8629
+                    UpdatedAt = user.UpdatedAt ?? DateTime.MinValue // Fix for CS0266 and CS8629
                 };
 
                 return Ok(response);
@@ -67,13 +67,13 @@ namespace SmartMedical.API.Controllers
                     Email = u.Email,
                     FirstName = u.FirstName,
                     LastName = u.LastName,
-                    DateOfBirth = u.DateOfBirth,
+                    DateOfBirth = u.DateOfBirth.ToDateTime(TimeOnly.MinValue), // Convert DateOnly to DateTime
                     PhoneNumber = u.PhoneNumber,
-                    EmailVerified = u.EmailVerified,
-                    IsActive = u.IsActive,
+                    EmailVerified = u.EmailVerified ?? false, // Fix for CS0266 and CS8629
+                    IsActive = u.IsActive ?? false, // Handle nullable IsActive similarly
                     LastLoginAt = u.LastLoginAt,
-                    CreatedAt = u.CreatedAt,
-                    UpdatedAt = u.UpdatedAt
+                    CreatedAt = u.CreatedAt ?? DateTime.MinValue, // Fix for CS0266 and CS8629
+                    UpdatedAt = u.UpdatedAt ?? DateTime.MinValue // Fix for CS0266 and CS8629
                 }).ToList();
 
                 return Ok(response);
@@ -100,7 +100,7 @@ namespace SmartMedical.API.Controllers
                     Email = request.Email,
                     FirstName = request.FirstName,
                     LastName = request.LastName,
-                    DateOfBirth = request.DateOfBirth,
+                    DateOfBirth = DateOnly.FromDateTime(request.DateOfBirth), // Convert DateTime to DateOnly
                     PhoneNumber = request.PhoneNumber,
                     EmailVerified = false,
                     IsActive = true
@@ -114,13 +114,13 @@ namespace SmartMedical.API.Controllers
                     Email = createdUser.Email,
                     FirstName = createdUser.FirstName,
                     LastName = createdUser.LastName,
-                    DateOfBirth = createdUser.DateOfBirth,
+                    DateOfBirth = createdUser.DateOfBirth.ToDateTime(TimeOnly.MinValue), // Convert DateOnly to DateTime
                     PhoneNumber = createdUser.PhoneNumber,
-                    EmailVerified = createdUser.EmailVerified,
-                    IsActive = createdUser.IsActive,
+                    EmailVerified = createdUser.EmailVerified ?? false, // Fix for CS0266 and CS8629
+                    IsActive = createdUser.IsActive ?? false, // Handle nullable IsActive similarly
                     LastLoginAt = createdUser.LastLoginAt,
-                    CreatedAt = createdUser.CreatedAt,
-                    UpdatedAt = createdUser.UpdatedAt
+                    CreatedAt = createdUser.CreatedAt ?? DateTime.MinValue, // Fix for CS0266 and CS8629
+                    UpdatedAt = createdUser.UpdatedAt ?? DateTime.MinValue // Fix for CS0266 and CS8629
                 };
 
                 return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, response);
@@ -146,7 +146,7 @@ namespace SmartMedical.API.Controllers
                 existingUser.FirstName = request.FirstName;
                 existingUser.LastName = request.LastName;
                 existingUser.PhoneNumber = request.PhoneNumber;
-                existingUser.DateOfBirth = request.DateOfBirth;
+                existingUser.DateOfBirth = DateOnly.FromDateTime(request.DateOfBirth); // Convert DateTime to DateOnly
 
                 var updatedUser = await _userService.UpdateAsync(existingUser);
 
@@ -156,13 +156,13 @@ namespace SmartMedical.API.Controllers
                     Email = updatedUser.Email,
                     FirstName = updatedUser.FirstName,
                     LastName = updatedUser.LastName,
-                    DateOfBirth = updatedUser.DateOfBirth,
+                    DateOfBirth = updatedUser.DateOfBirth.ToDateTime(TimeOnly.MinValue), // Convert DateOnly to DateTime
                     PhoneNumber = updatedUser.PhoneNumber,
-                    EmailVerified = updatedUser.EmailVerified,
-                    IsActive = updatedUser.IsActive,
+                    EmailVerified = updatedUser.EmailVerified ?? false,
+                    IsActive = updatedUser.IsActive ?? false,
                     LastLoginAt = updatedUser.LastLoginAt,
-                    CreatedAt = updatedUser.CreatedAt,
-                    UpdatedAt = updatedUser.UpdatedAt
+                    CreatedAt = updatedUser.CreatedAt ?? DateTime.MinValue,
+                    UpdatedAt = updatedUser.UpdatedAt ?? DateTime.MinValue
                 };
 
                 return Ok(response);

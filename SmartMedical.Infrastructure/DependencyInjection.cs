@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SmartMedical.Infrastructure.Data;
+using SmartMedical.Infrastructure.Models;
 
 namespace SmartMedical.Infrastructure
 {

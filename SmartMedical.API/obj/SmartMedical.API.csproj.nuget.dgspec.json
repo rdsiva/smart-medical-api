@@ -140,9 +140,6 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Core\\SmartMedical.Core.csproj": {
-                "projectPath": "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Core\\SmartMedical.Core.csproj"
-              },
               "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Infrastructure\\SmartMedical.Infrastructure.csproj": {
                 "projectPath": "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Infrastructure\\SmartMedical.Infrastructure.csproj"
               }
@@ -284,11 +281,7 @@
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
-            "projectReferences": {
-              "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Core\\SmartMedical.Core.csproj": {
-                "projectPath": "D:\\Ideas\\SMA-app\\smart-medical-api\\SmartMedical.Core\\SmartMedical.Core.csproj"
-              }
-            }
+            "projectReferences": {}
           }
         },
         "warningProperties": {

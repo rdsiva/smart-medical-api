@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using SmartMedical.API.Data;
 using SmartMedical.API.Extensions;
 using SmartMedical.Infrastructure;
-using SmartMedical.Infrastructure.Data;
+using SmartMedical.Infrastructure.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

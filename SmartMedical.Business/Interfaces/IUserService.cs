@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SmartMedical.Core.Entities.Auth;
+using SmartMedical.Infrastructure.Models;
 
 namespace SmartMedical.Business.Interfaces
 {

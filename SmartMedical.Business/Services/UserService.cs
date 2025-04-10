@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 using SmartMedical.Business.Interfaces;
-using SmartMedical.Core.Entities.Auth;
+using SmartMedical.Infrastructure.Models;
 using SmartMedical.Core.Interfaces;
 using System;
 using System.Collections.Generic;

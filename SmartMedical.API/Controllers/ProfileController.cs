@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartMedical.Business.Interfaces;
-using SmartMedical.Core.Entities.Users;
+using SmartMedical.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,25 +28,25 @@ namespace SmartMedical.API.Controllers
                 // For now, we're using a hardcoded user ID for demonstration
                 // In a real application, this would come from the authenticated user
                 var userId = Guid.Parse("235aa9a3-d82a-4331-9ea1-033807ddd64c");
-                
+
                 var profile = await _profileService.GetProfileByUserIdAsync(userId);
                 if (profile == null)
                 {
                     return NotFound(new { message = "Profile not found" });
                 }
-                
+
                 var response = new ProfileResponse
                 {
                     UserId = profile.UserId,
                     FirstName = profile.FirstName,
                     LastName = profile.LastName,
-                    DateOfBirth = profile.DateOfBirth,
+                    DateOfBirth = profile.DateOfBirth.ToDateTime(TimeOnly.MinValue), // Fix for CS0029
                     Gender = profile.Gender,
                     PhoneNumber = profile.PhoneNumber,
                     Email = profile.Email,
                     ProfilePhotoUrl = profile.ProfilePhotoUrl
                 };
-                
+
                 return Ok(response);
             }
             catch (Exception ex)
@@ -64,23 +64,23 @@ namespace SmartMedical.API.Controllers
                 // For now, we're using a hardcoded user ID for demonstration
                 // In a real application, this would come from the authenticated user
                 var userId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6");
-                
+
                 var existingProfile = await _profileService.GetProfileByUserIdAsync(userId);
                 if (existingProfile == null)
                 {
                     return NotFound(new { message = "Profile not found" });
                 }
-                
+
                 // Update profile properties
                 existingProfile.FirstName = request.FirstName;
                 existingProfile.LastName = request.LastName;
-                existingProfile.DateOfBirth = request.DateOfBirth;
+                existingProfile.DateOfBirth = DateOnly.FromDateTime(request.DateOfBirth); // Fix for CS0029
                 existingProfile.Gender = request.Gender;
                 existingProfile.PhoneNumber = request.PhoneNumber;
                 existingProfile.Email = request.Email;
-                
+
                 await _profileService.UpdateProfileAsync(userId, existingProfile);
-                
+
                 return Ok(new { message = "Profile updated successfully" });
             }
             catch (Exception ex)
@@ -109,7 +109,7 @@ namespace SmartMedical.API.Controllers
                     State = a.State,
                     PostalCode = a.PostalCode,
                     Country = a.Country,
-                    IsPrimary = a.IsPrimary
+                    IsPrimary = (bool)a.IsPrimary
                 }).ToList();
                 
                 return Ok(response);
@@ -139,7 +139,7 @@ namespace SmartMedical.API.Controllers
                     Relationship = c.Relationship,
                     PhoneNumber = c.PhoneNumber,
                     Email = c.Email,
-                    IsPrimary = c.IsPrimary
+                    IsPrimary = c.IsPrimary ?? false
                 }).ToList();
                 
                 return Ok(response);

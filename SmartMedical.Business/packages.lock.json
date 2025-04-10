@@ -186,17 +186,13 @@
           "Npgsql": "9.0.3"
         }
       },
-      "smartmedical.core": {
-        "type": "Project"
-      },
       "smartmedical.infrastructure": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "[9.0.4, )",
           "Microsoft.Extensions.Configuration.FileExtensions": "[9.0.4, )",
           "Microsoft.Extensions.Configuration.Json": "[9.0.4, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.4, )",
-          "SmartMedical.Core": "[1.0.0, )"
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.4, )"
         }
       }
     }

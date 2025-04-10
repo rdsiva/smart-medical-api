@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using SmartMedical.Core.Entities.Auth;
 using SmartMedical.Core.Interfaces;
-using SmartMedical.Infrastructure.Data;
+using SmartMedical.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
