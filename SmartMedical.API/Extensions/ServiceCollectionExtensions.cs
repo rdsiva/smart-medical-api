@@ -1,8 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using SmartMedical.Business.Interfaces;
-using SmartMedical.Business.Services;
-using SmartMedical.Core.Interfaces;
-using SmartMedical.Infrastructure.Repositories;
+using SmartMedical.Infrastructure;
 
 namespace SmartMedical.API.Extensions
 {
@@ -10,17 +7,16 @@ namespace SmartMedical.API.Extensions
     {
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IProfileRepository, ProfileRepository>();
+            // Use the centralized dependency injection from Infrastructure
+            services.AddInfrastructureServices();
             
             return services;
         }
         
         public static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IProfileService, ProfileService>();
-            
+            // Business services are now registered in the Infrastructure.DependencyInjection class
+            // This method is kept for backward compatibility
             return services;
         }
     }

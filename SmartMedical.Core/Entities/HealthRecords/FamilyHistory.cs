@@ -5,16 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartMedical.Core.Entities.HealthRecords
 {
-    public class Allergy
+    public class FamilyHistory
     {
         [Key]
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; } // medication, food, environmental
-        public string Severity { get; set; } // mild, moderate, severe
-        public string Reaction { get; set; }
-        public DateTime? DiagnosedDate { get; set; }
+        public string Condition { get; set; }
+        public string Relationship { get; set; } // mother, father, sibling, etc.
+        public string Status { get; set; } // current, deceased, etc.
+        public string AgeAtDiagnosis { get; set; }
+        public string AgeAtDeath { get; set; }
         public string Notes { get; set; }
         public string Source { get; set; } // self-reported, provider-reported, imported
         public DateTime CreatedAt { get; set; }

@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using SmartMedical.Infrastructure.Models;
+using SmartMedical.Business.Interfaces;
+using SmartMedical.Core.Entities.Medications;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SmartMedical.API.Controllers
 {
@@ -11,49 +14,29 @@ namespace SmartMedical.API.Controllers
     public class MedicationsController : ControllerBase
     {
         private readonly ILogger<MedicationsController> _logger;
+        private readonly IMedicationService _medicationService;
 
-        public MedicationsController(ILogger<MedicationsController> logger)
+        public MedicationsController(
+            ILogger<MedicationsController> logger,
+            IMedicationService medicationService)
         {
             _logger = logger;
+            _medicationService = medicationService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMedications()
+        public async Task<IActionResult> GetMedications([FromQuery] bool? active, [FromQuery] string search)
         {
             try
             {
-                // This would be implemented with actual service calls
-                var medications = new List<MedicationResponse>
-                {
-                    new MedicationResponse
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = "Lisinopril",
-                        Dosage = "10mg",
-                        Frequency = "Once daily",
-                        Instructions = "Take in the morning with food",
-                        StartDate = DateTime.Now.AddMonths(-3),
-                        EndDate = null,
-                        PrescribedBy = "Dr. Robert Wilson",
-                        Reason = "For hypertension",
-                        IsActive = true
-                    },
-                    new MedicationResponse
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = "Metformin",
-                        Dosage = "500mg",
-                        Frequency = "Twice daily",
-                        Instructions = "Take with meals",
-                        StartDate = DateTime.Now.AddMonths(-6),
-                        EndDate = null,
-                        PrescribedBy = "Dr. Robert Wilson",
-                        Reason = "For diabetes management",
-                        IsActive = true
-                    }
-                };
+                // For demo purposes, using a hardcoded user ID
+                // In a real application, this would come from the authenticated user
+                var userId = Guid.Parse("00000000-0000-0000-0000-000000000001");
                 
-                return Ok(medications);
+                var medications = await _medicationService.GetMedicationsAsync(userId, active, search);
+                var response = medications.Select(m => MapToMedicationResponse(m));
+                
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -67,22 +50,17 @@ namespace SmartMedical.API.Controllers
         {
             try
             {
-                // This would be implemented with actual service calls
-                var medication = new MedicationResponse
-                {
-                    Id = id,
-                    Name = "Lisinopril",
-                    Dosage = "10mg",
-                    Frequency = "Once daily",
-                    Instructions = "Take in the morning with food",
-                    StartDate = DateTime.Now.AddMonths(-3),
-                    EndDate = null,
-                    PrescribedBy = "Dr. Robert Wilson",
-                    Reason = "For hypertension",
-                    IsActive = true
-                };
+                // For demo purposes, using a hardcoded user ID
+                var userId = Guid.Parse("00000000-0000-0000-0000-000000000001");
                 
-                return Ok(medication);
+                var medication = await _medicationService.GetMedicationByIdAsync(id, userId);
+                
+                if (medication == null)
+                {
+                    return NotFound(new { message = "Medication not found" });
+                }
+                
+                return Ok(MapToMedicationResponse(medication));
             }
             catch (Exception ex)
             {
@@ -96,9 +74,29 @@ namespace SmartMedical.API.Controllers
         {
             try
             {
-                // This would be implemented with actual service calls
-                var medicationId = Guid.NewGuid();
-                return CreatedAtAction(nameof(GetMedication), new { id = medicationId }, new { id = medicationId });
+                // For demo purposes, using a hardcoded user ID
+                var userId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+                
+                var medication = new Medication
+                {
+                    UserId = userId,
+                    Name = request.Name,
+                    Dosage = request.Dosage,
+                    Frequency = request.Frequency,
+                    Instructions = request.Instructions,
+                    StartDate = request.StartDate,
+                    EndDate = request.EndDate,
+                    PrescribedBy = request.PrescribedBy,
+                    Reason = request.Reason,
+                    IsActive = true
+                };
+                
+                var createdMedication = await _medicationService.CreateMedicationAsync(medication);
+                
+                return CreatedAtAction(
+                    nameof(GetMedication), 
+                    new { id = createdMedication.Id }, 
+                    MapToMedicationResponse(createdMedication));
             }
             catch (Exception ex)
             {
@@ -112,8 +110,34 @@ namespace SmartMedical.API.Controllers
         {
             try
             {
-                // This would be implemented with actual service calls
-                return Ok(new { message = "Medication updated successfully" });
+                // For demo purposes, using a hardcoded user ID
+                var userId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+                
+                var existingMedication = await _medicationService.GetMedicationByIdAsync(id, userId);
+                
+                if (existingMedication == null)
+                {
+                    return NotFound(new { message = "Medication not found" });
+                }
+                
+                // Update medication properties
+                existingMedication.Name = request.Name ?? existingMedication.Name;
+                existingMedication.Dosage = request.Dosage ?? existingMedication.Dosage;
+                existingMedication.Frequency = request.Frequency ?? existingMedication.Frequency;
+                existingMedication.Instructions = request.Instructions ?? existingMedication.Instructions;
+                existingMedication.StartDate = request.StartDate;
+                existingMedication.EndDate = request.EndDate;
+                existingMedication.PrescribedBy = request.PrescribedBy ?? existingMedication.PrescribedBy;
+                existingMedication.Reason = request.Reason ?? existingMedication.Reason;
+                existingMedication.IsActive = request.IsActive;
+                
+                var updatedMedication = await _medicationService.UpdateMedicationAsync(existingMedication);
+                
+                return Ok(MapToMedicationResponse(updatedMedication));
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { message = "Medication not found" });
             }
             catch (Exception ex)
             {
@@ -127,7 +151,16 @@ namespace SmartMedical.API.Controllers
         {
             try
             {
-                // This would be implemented with actual service calls
+                // For demo purposes, using a hardcoded user ID
+                var userId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+                
+                var result = await _medicationService.DeleteMedicationAsync(id, userId);
+                
+                if (!result)
+                {
+                    return NotFound(new { message = "Medication not found" });
+                }
+                
                 return Ok(new { message = "Medication deleted successfully" });
             }
             catch (Exception ex)
@@ -142,20 +175,17 @@ namespace SmartMedical.API.Controllers
         {
             try
             {
-                // This would be implemented with actual service calls
-                var schedules = new List<MedicationScheduleResponse>
+                var schedules = await _medicationService.GetMedicationSchedulesAsync(id);
+                var response = schedules.Select(s => new MedicationScheduleResponse
                 {
-                    new MedicationScheduleResponse
-                    {
-                        Id = Guid.NewGuid(),
-                        MedicationId = id,
-                        TimeOfDay = "08:00",
-                        Dosage = "10mg",
-                        WithFood = true
-                    }
-                };
+                    Id = s.Id,
+                    MedicationId = s.MedicationId,
+                    TimeOfDay = s.ScheduledTime.ToString("HH:mm"),
+                    Dosage = s.Dosage,
+                    WithFood = s.WithFood
+                });
                 
-                return Ok(schedules);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -164,32 +194,128 @@ namespace SmartMedical.API.Controllers
             }
         }
 
-        [HttpGet("{id}/doses")]
-        public async Task<IActionResult> GetMedicationDoses(Guid id, [FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate)
+        [HttpPost("{id}/schedules")]
+        public async Task<IActionResult> AddMedicationSchedule(Guid id, [FromBody] AddMedicationScheduleRequest request)
         {
             try
             {
-                // This would be implemented with actual service calls
-                var doses = new List<MedicationDoseResponse>
+                var schedule = new MedicationSchedule
                 {
-                    new MedicationDoseResponse
-                    {
-                        Id = Guid.NewGuid(),
-                        MedicationId = id,
-                        ScheduledTime = DateTime.Now.Date.AddHours(8),
-                        TakenTime = DateTime.Now.Date.AddHours(8).AddMinutes(5),
-                        Status = "taken",
-                        DosageTaken = "10mg"
-                    }
+                    MedicationId = id,
+                    ScheduledTime = TimeOnly.Parse(request.TimeOfDay).ToTimeSpan(),
+                    Dosage = request.Dosage,
+                    WithFood = request.WithFood,
+                    WithWater = request.WithWater,
+                    SpecialInstructions = request.SpecialInstructions,
+                    ReminderEnabled = request.ReminderEnabled,
+                    ReminderLeadTime = request.ReminderLeadTime
                 };
                 
-                return Ok(doses);
+                var createdSchedule = await _medicationService.CreateMedicationScheduleAsync(schedule);
+                
+                return CreatedAtAction(
+                    nameof(GetMedicationSchedules), 
+                    new { id = id }, 
+                    new MedicationScheduleResponse
+                    {
+                        Id = createdSchedule.Id,
+                        MedicationId = createdSchedule.MedicationId,
+                        TimeOfDay = createdSchedule.ScheduledTime.ToString("HH:mm"),
+                        Dosage = createdSchedule.Dosage,
+                        WithFood = createdSchedule.WithFood
+                    });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding medication schedule");
+                return BadRequest(new { message = "Failed to add medication schedule" });
+            }
+        }
+
+        [HttpGet("schedules/{scheduleId}/doses")]
+        public async Task<IActionResult> GetMedicationDoses(Guid scheduleId)
+        {
+            try
+            {
+                var doses = await _medicationService.GetMedicationDosesAsync(scheduleId);
+                var response = doses.Select(d => new MedicationDoseResponse
+                {
+                    Id = d.Id,
+                    MedicationId = d.Schedule.MedicationId,
+                    ScheduledTime = d.ScheduledTime,
+                    TakenTime = d.ActualTime,
+                    Status = d.Taken ? "taken" : "missed",
+                    DosageTaken = d.Schedule.Dosage
+                });
+                
+                return Ok(response);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving medication doses");
                 return BadRequest(new { message = "Failed to retrieve medication doses" });
             }
+        }
+
+        [HttpPost("schedules/{scheduleId}/doses")]
+        public async Task<IActionResult> RecordMedicationDose(Guid scheduleId, [FromBody] RecordMedicationDoseRequest request)
+        {
+            try
+            {
+                var result = await _medicationService.RecordMedicationDoseAsync(
+                    scheduleId, 
+                    request.TakenAt, 
+                    request.Taken);
+                
+                if (!result)
+                {
+                    return NotFound(new { message = "Medication schedule not found" });
+                }
+                
+                return Ok(new { message = "Medication dose recorded successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error recording medication dose");
+                return BadRequest(new { message = "Failed to record medication dose" });
+            }
+        }
+
+        [HttpGet("due-for-refill")]
+        public async Task<IActionResult> GetMedicationsDueForRefill([FromQuery] int daysThreshold = 7)
+        {
+            try
+            {
+                // For demo purposes, using a hardcoded user ID
+                var userId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+                
+                var medications = await _medicationService.GetMedicationsDueForRefillAsync(userId, daysThreshold);
+                var response = medications.Select(m => MapToMedicationResponse(m));
+                
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving medications due for refill");
+                return BadRequest(new { message = "Failed to retrieve medications due for refill" });
+            }
+        }
+
+        private MedicationResponse MapToMedicationResponse(Medication medication)
+        {
+            return new MedicationResponse
+            {
+                Id = medication.Id,
+                Name = medication.Name,
+                Dosage = medication.Dosage,
+                Frequency = medication.Frequency,
+                Instructions = medication.Instructions,
+                StartDate = medication.StartDate,
+                EndDate = medication.EndDate,
+                PrescribedBy = medication.PrescribedBy,
+                Reason = medication.Reason,
+                IsActive = medication.IsActive
+            };
         }
     }
 
@@ -241,6 +367,17 @@ namespace SmartMedical.API.Controllers
         public bool WithFood { get; set; }
     }
 
+    public class AddMedicationScheduleRequest
+    {
+        public string TimeOfDay { get; set; } // Format: "HH:MM"
+        public string Dosage { get; set; }
+        public bool WithFood { get; set; }
+        public bool WithWater { get; set; }
+        public string SpecialInstructions { get; set; }
+        public bool ReminderEnabled { get; set; }
+        public int ReminderLeadTime { get; set; } // Minutes before scheduled time
+    }
+
     public class MedicationDoseResponse
     {
         public Guid Id { get; set; }
@@ -249,5 +386,12 @@ namespace SmartMedical.API.Controllers
         public DateTime? TakenTime { get; set; }
         public string Status { get; set; }
         public string DosageTaken { get; set; }
+    }
+
+    public class RecordMedicationDoseRequest
+    {
+        public DateTime TakenAt { get; set; }
+        public bool Taken { get; set; }
+        public string Notes { get; set; }
     }
 }
