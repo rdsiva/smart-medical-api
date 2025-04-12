@@ -1,4 +1,5 @@
 using System;
+using SmartMedical.Core.Entities.HealthRecords;
 
 namespace SmartMedical.Core.Entities.Medications
 {
@@ -16,5 +17,7 @@ namespace SmartMedical.Core.Entities.Medications
 
         // Navigation properties
         public Medication Medication { get; set; }
+        public MedicationSchedule Schedule{ get; set; }
+        public Guid ScheduleId { get; set; }
     }
 }

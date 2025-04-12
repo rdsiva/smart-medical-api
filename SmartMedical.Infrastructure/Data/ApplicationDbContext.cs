@@ -10,40 +10,41 @@ namespace SmartMedical.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
         }
 
-        // Auth schema
+        // Auth entities
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
-        // Users schema
+        // User entities
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<EmergencyContact> EmergencyContacts { get; set; }
         public DbSet<HealthcareProvider> HealthcareProviders { get; set; }
         public DbSet<UserProvider> UserProviders { get; set; }
 
-        // Health Records schema
+        // Health record entities
         public DbSet<Condition> Conditions { get; set; }
         public DbSet<Allergy> Allergies { get; set; }
         public DbSet<Immunization> Immunizations { get; set; }
         public DbSet<VitalStat> VitalStats { get; set; }
 
-        // Medications schema
+        // Medication entities
         public DbSet<Medication> Medications { get; set; }
         public DbSet<MedicationSchedule> MedicationSchedules { get; set; }
         public DbSet<MedicationDose> MedicationDoses { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
 
-        // Appointments schema
+        // Appointment entities
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AppointmentReminder> AppointmentReminders { get; set; }
 
-        // AI Assistant schema
+        // AI Assistant entities
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<CachedPrompt> CachedPrompts { get; set; }
@@ -52,43 +53,169 @@ namespace SmartMedical.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure schemas
-            modelBuilder.HasDefaultSchema("public");
+            // Configure schemas for entities
             
+            // Auth schema entities
             modelBuilder.Entity<User>().ToTable("users", "auth");
             modelBuilder.Entity<Role>().ToTable("roles", "auth");
             modelBuilder.Entity<UserRole>().ToTable("user_roles", "auth");
             modelBuilder.Entity<RefreshToken>().ToTable("refresh_tokens", "auth");
 
+            // Users schema entities
             modelBuilder.Entity<Profile>().ToTable("profiles", "users");
             modelBuilder.Entity<Address>().ToTable("addresses", "users");
             modelBuilder.Entity<EmergencyContact>().ToTable("emergency_contacts", "users");
             modelBuilder.Entity<HealthcareProvider>().ToTable("healthcare_providers", "users");
             modelBuilder.Entity<UserProvider>().ToTable("user_providers", "users");
 
+            // Health records schema entities
             modelBuilder.Entity<Condition>().ToTable("conditions", "health_records");
             modelBuilder.Entity<Allergy>().ToTable("allergies", "health_records");
             modelBuilder.Entity<Immunization>().ToTable("immunizations", "health_records");
             modelBuilder.Entity<VitalStat>().ToTable("vital_stats", "health_records");
 
+            // Medications schema entities
             modelBuilder.Entity<Medication>().ToTable("medications", "medications");
             modelBuilder.Entity<MedicationSchedule>().ToTable("medication_schedules", "medications");
             modelBuilder.Entity<MedicationDose>().ToTable("medication_doses", "medications");
             modelBuilder.Entity<Prescription>().ToTable("prescriptions", "medications");
 
+            // Appointments schema entities
             modelBuilder.Entity<Appointment>().ToTable("appointments", "appointments");
             modelBuilder.Entity<AppointmentReminder>().ToTable("appointment_reminders", "appointments");
 
+            // AI Assistant schema entities
             modelBuilder.Entity<Conversation>().ToTable("conversations", "ai_assistant");
             modelBuilder.Entity<Message>().ToTable("messages", "ai_assistant");
             modelBuilder.Entity<CachedPrompt>().ToTable("cached_prompts", "ai_assistant");
 
-            // Configure relationships
+            // Configure relationships and constraints
+            
+            // Auth configurations
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => new { ur.UserId, ur.RoleId });
 
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId);
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId);
+
+            modelBuilder.Entity<RefreshToken>()
+                .HasOne(rt => rt.User)
+                .WithMany(u => u.RefreshTokens)
+                .HasForeignKey(rt => rt.UserId);
+
+            // User configurations
+            modelBuilder.Entity<Profile>()
+                .HasOne(p => p.User)
+                .WithOne()
+                .HasForeignKey<Profile>(p => p.UserId);
+
+            modelBuilder.Entity<Address>()
+                .HasOne(a => a.User)
+                .WithMany(u => u.Addresses)
+                .HasForeignKey(a => a.UserId);
+
+            modelBuilder.Entity<EmergencyContact>()
+                .HasOne(ec => ec.User)
+                .WithMany(u => u.EmergencyContacts)
+                .HasForeignKey(ec => ec.UserId);
+
             modelBuilder.Entity<UserProvider>()
                 .HasKey(up => new { up.UserId, up.ProviderId });
+
+            modelBuilder.Entity<UserProvider>()
+                .HasOne(up => up.User)
+                .WithMany(u => u.UserProviders)
+                .HasForeignKey(up => up.UserId);
+
+            modelBuilder.Entity<UserProvider>()
+                .HasOne(up => up.Provider)
+                .WithMany(p => p.UserProviders)
+                .HasForeignKey(up => up.ProviderId);
+
+            // Health record configurations
+            modelBuilder.Entity<Condition>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Conditions)
+                .HasForeignKey(c => c.UserId);
+
+            modelBuilder.Entity<Allergy>()
+                .HasOne(a => a.User)
+                .WithMany(u => u.Allergies)
+                .HasForeignKey(a => a.UserId);
+
+            modelBuilder.Entity<Immunization>()
+                .HasOne(i => i.User)
+                .WithMany(u => u.Immunizations)
+                .HasForeignKey(i => i.UserId);
+
+            modelBuilder.Entity<VitalStat>()
+                .HasOne(vs => vs.User)
+                .WithMany(u => u.VitalStats)
+                .HasForeignKey(vs => vs.UserId);
+
+            // Medication configurations
+            modelBuilder.Entity<Medication>()
+                .HasOne(m => m.User)
+                .WithMany(u => u.Medications)
+                .HasForeignKey(m => m.UserId);
+
+            modelBuilder.Entity<MedicationSchedule>()
+                .HasOne(ms => ms.Medication)
+                .WithMany(m => m.MedicationSchedules)
+                .HasForeignKey(ms => ms.MedicationId);
+
+            modelBuilder.Entity<MedicationDose>()
+                .HasOne(md => md.Schedule)
+                .WithMany(ms => ms.MedicationDoses)
+                .HasForeignKey(md => md.ScheduleId);
+
+            modelBuilder.Entity<Prescription>()
+                .HasOne(p => p.Medication)
+                .WithMany(m => m.Prescriptions)
+                .HasForeignKey(p => p.MedicationId);
+
+            // Appointment configurations
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.Provider)
+                .WithMany(p => p.Appointments)
+                .HasForeignKey(a => new { a.UserId, a.ProviderId });
+
+            //modelBuilder.Entity<Appointment>()
+            //    .HasOne(a => a.User)
+            //    .WithMany(u => u.Appointments)
+            //    .HasForeignKey(a => a.UserId);
+
+            //modelBuilder.Entity<Appointment>()
+            //    .HasOne(a => a.Provider)
+            //    .WithMany(p => p.Appointments)
+            //    .HasForeignKey(a => a.ProviderId);
+
+            modelBuilder.Entity<AppointmentReminder>()
+                .HasOne(ar => ar.Appointment)
+                .WithMany(a => a.Reminders)
+                .HasForeignKey(ar => ar.AppointmentId);
+
+            // AI Assistant configurations
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Conversations)
+                .HasForeignKey(c => c.UserId);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId);
         }
     }
 }

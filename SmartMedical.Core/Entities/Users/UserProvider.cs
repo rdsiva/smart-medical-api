@@ -1,4 +1,5 @@
 using System;
+using SmartMedical.Core.Entities.Appointments;
 
 namespace SmartMedical.Core.Entities.Users
 {
@@ -15,5 +16,6 @@ namespace SmartMedical.Core.Entities.Users
         // Navigation properties
         public Auth.User User { get; set; }
         public HealthcareProvider Provider { get; set; }
+        public ICollection<Appointment> Appointments{ get; set; }
     }
 }

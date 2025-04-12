@@ -1,9 +1,11 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartMedical.Core.Entities.AIAssistant
 {
     public class CachedPrompt
     {
+        [Key]
         public Guid Id { get; set; }
         public string PromptHash { get; set; }
         public string PromptText { get; set; }

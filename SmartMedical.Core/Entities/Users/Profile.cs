@@ -1,9 +1,11 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartMedical.Core.Entities.Users
 {
     public class Profile
     {
+        [Key]
         public Guid UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
